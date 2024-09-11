@@ -162,3 +162,44 @@ db/src/
 db/undeploy.json
 xs-security.json
 ```
+
+Add mta config:
+
+```
+cds add mta
+```
+
+This created an `mta.yaml` file, adjust following lines:
+
+```
+-        description: A simple CAP project.
+-        category: 'Category'
++        description: Sample bookshop CAP project.
++        category: "Sample Applications"
+```
+
+Didn't bother to freeze `package-lock.json`
+
+Install dependencies UI apps:
+
+```
+npm i --prefix app
+```
+
+Couldn't find any `package.json` files in the suggested locations by the tutorial:
+
+```
+app/browse
+app/admin-books
+```
+
+# Build and deploy
+
+```
+mbt build -t gen --mtar mta_bookshop.tar
+```
+
+```
+cf login --sso
+cf deploy gen/mta_bookshop.tar
+```
