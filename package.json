@@ -20,6 +20,9 @@
     "requires": {
       "[production]": {
         "multitenancy": true
+      },
+      "[local-multitenancy]": {
+        "multitenancy": true
       }
     }
   }
