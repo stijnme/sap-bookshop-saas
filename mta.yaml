@@ -60,6 +60,26 @@ modules:
           app-protocol: ${protocol}
           app-uri: ${default-uri}
 
+  - name: bookshop-mtx
+    type: nodejs
+    path: gen/mtx/sidecar
+    requires:
+      - name: app-api
+        properties:
+          SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-~{app-uri}
+      - name: bookshop-db
+      - name: bookshop-registry
+      - name: bookshop-auth
+    build-parameters:
+      builder: npm-ci
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
+
 resources:
   - name: bookshop-auth
     type: org.cloudfoundry.managed-service

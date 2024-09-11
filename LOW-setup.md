@@ -113,6 +113,74 @@ cds subscribe t2 --to http://localhost:4004 -u yves:
 
 Remark: some port `4004`, since we don't run a seperate instance for the mtx module (as in the tutorial on port `4005`).
 
+# MTX sidecar setup
+
+> The SaaS operations subscribe and upgrade tend to be resource-intensive. Therefore, it's recommended to offload these tasks onto a separate microservice, which you can scale independently of your main app servers.
+
+Secondly, we had problems subscribing to the deployed application.
+Hence, we assume that in the non-sidecar mode configuration isn't supported.
+
+Adjusted `package.json`:
+
+```json
+   "cds": {
++    "profile": "with-mtx-sidecar",
+     "requires": {
+       "[production]": {
+```
+
+```
+mkdir -p mtx/sidecar
+```
+
+Created `mtx/sidecar/package.json` with contents:
+
+```json
+{
+  "name": "bookshop-mtx",
+  "dependencies": {
+    "@sap/cds": "^8",
+    "@sap/cds-hana": "^2",
+    "@sap/cds-mtxs": "^2",
+    "@sap/xssec": "^4",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": ">=1"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cds": {
+    "profile": "mtx-sidecar"
+  }
+}
+```
+
+# Test run with sidecar
+
+Start in different terminal sessions:
+
+```
+cds watch mtx/sidecar
+```
+
+```
+cds watch --profile local-multitenancy
+```
+
+Now it should be possible to subscribe via the mtx sidecar:
+
+```
+cds subscribe t3 --to http://localhost:4005 -u yves:
+cds subscribe t4 --to http://localhost:4005 -u yves:
+```
+
+Remarks:
+
+- Used `t3` and `t4` as tenant names, since `t1` and `t2` already exist.
+- Because they already exists, HTTP 500 (`ERR_BAD_RESPONSE`) is returned.
+
 # Deploy SaaS to Cloud
 
 Add config:

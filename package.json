@@ -15,12 +15,14 @@
     "hdb": "^0.19.0"
   },
   "devDependencies": {
+    "@sap/cds-dk": "^8",
     "sqlite3": "^5.0.4"
   },
   "scripts": {
     "start": "cds run"
   },
   "cds": {
+    "profile": "with-mtx-sidecar",
     "requires": {
       "[production]": {
         "multitenancy": true,
