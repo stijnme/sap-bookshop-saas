@@ -285,6 +285,13 @@ And added:
     "@sap/cds-dk": "^8",
 ```
 
+Modified the start script:
+
+```
+-    "start": "cds run"
++    "start": "cds-serve"
+```
+
 ```
 npm i
 ```
