@@ -1,3 +1,5 @@
+# Init project
+
 Create project:
 
 ```
@@ -31,6 +33,8 @@ Following request in the browser shows 2 books:
 ```
 http://localhost:4004/catalog/Books
 ```
+
+# Add multitenancy
 
 Add multi-tenant support:
 
@@ -86,7 +90,7 @@ This adds another config changes to `package.json`:
 
 Remark: this is different from the [tutorial](https://cap.cloud.sap/docs/guides/multitenancy/), because we don't use a sidecar for the mtx module.
 
-Test run:
+# Test run
 
 ```
 cds watch --profile local-multitenancy
@@ -100,3 +104,61 @@ cds subscribe t2 --to http://localhost:4004 -u yves:
 ```
 
 Remark: some port `4004`, since we don't run a seperate instance for the mtx module (as in the tutorial on port `4005`).
+
+# Deploy SaaS to Cloud
+
+Add config:
+
+```
+cds add hana,xsuaa,approuter --for production
+npm i
+```
+
+This updates `package.json` again:
+
+```
+--- a/package.json
++++ b/package.json
+@@ -8,7 +8,10 @@
+   "dependencies": {
+     "@sap/cds": "^6",
+     "@sap/cds-mtxs": "^1",
+-    "express": "^4"
++    "express": "^4",
++    "@sap/xssec": "^3",
++    "passport": "^0",
++    "hdb": "^0.19.0"
+   },
+   "devDependencies": {
+     "sqlite3": "^5.0.4"
+@@ -19,10 +22,22 @@
+   "cds": {
+     "requires": {
+       "[production]": {
+-        "multitenancy": true
++        "multitenancy": true,
++        "auth": {
++          "kind": "xsuaa"
++        },
++        "db": {
++          "kind": "hana-mt"
++        },
++        "approuter": {
++          "kind": "cloudfoundry"
++        }
+       },
+       "[local-multitenancy]": {
+         "multitenancy": true
++      },
++      "db": {
++        "kind": "sqlite"
+```
+
+And adds following files and folders:
+
+```
+app/
+db/src/
+db/undeploy.json
+xs-security.json
+```
