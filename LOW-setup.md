@@ -1,3 +1,11 @@
+# Prerequisite
+
+Update ``@sap/cds-dk` to the latest version:
+
+```
+npm update -g @sap/cds-dk
+```
+
 # Init project
 
 Create project:
@@ -195,11 +203,22 @@ app/admin-books
 
 # Build and deploy
 
+Had build issues, upgraded `@sap/cds` in `package.json`:
+
+```
+-    "@sap/cds": "^6",
++    "@sap/cds": "^8",
+```
+
+```
+npm i
+```
+
 ```
 mbt build -t gen --mtar mta_bookshop.tar
 ```
 
 ```
-cf login --sso
+cf login --sso -a https://api.cf.eu20-001.hana.ondemand.com
 cf deploy gen/mta_bookshop.tar
 ```
