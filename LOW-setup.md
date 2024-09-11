@@ -206,8 +206,15 @@ app/admin-books
 Had build issues, upgraded `@sap/cds` in `package.json`:
 
 ```
+
 -    "@sap/cds": "^6",
 +    "@sap/cds": "^8",
+```
+
+And added:
+
+```
+    "@sap/cds-dk": "^8",
 ```
 
 ```
