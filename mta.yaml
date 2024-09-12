@@ -21,9 +21,6 @@ modules:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
           srv-url: ${default-url}
-      - name: mtx-api # potentially required by approuter
-        properties:
-          mtx-url: ${default-url}
     requires:
       - name: bookshop-auth
       - name: app-api
@@ -59,6 +56,26 @@ modules:
         properties:
           app-protocol: ${protocol}
           app-uri: ${default-uri}
+
+  - name: bookshop-mtx
+    type: nodejs
+    path: gen/mtx/sidecar
+    requires:
+      - name: app-api
+        properties:
+          SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-~{app-uri}
+      - name: bookshop-db
+      - name: bookshop-registry
+      - name: bookshop-auth
+    build-parameters:
+      builder: npm-ci
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
 
 resources:
   - name: bookshop-auth
